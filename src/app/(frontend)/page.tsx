@@ -1,59 +1,89 @@
-import { headers as getHeaders } from 'next/headers.js'
-import Image from 'next/image'
-import { getPayload } from 'payload'
-import React from 'react'
-import { fileURLToPath } from 'url'
+import Link from 'next/link'
 
-import config from '@/payload.config'
+import { ExperienceRow, PostRow, ProjectCard, SiteFooter, SiteHeader } from './components'
+import { getExperiences, getPosts, getProjects } from '@/lib/portfolio'
 import './styles.css'
 
-export default async function HomePage() {
-  const headers = await getHeaders()
-  const payloadConfig = await config
-  const payload = await getPayload({ config: payloadConfig })
-  const { user } = await payload.auth({ headers })
+export const dynamic = 'force-dynamic'
 
-  const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
+export default async function HomePage() {
+  const [projects, experiences, posts] = await Promise.all([
+    getProjects({ featuredOnly: true, limit: 3 }),
+    getExperiences(5),
+    getPosts(3),
+  ])
 
   return (
-    <div className="home">
-      <div className="content">
-        <picture>
-          <source srcSet="https://raw.githubusercontent.com/payloadcms/payload/3.x/packages/ui/src/assets/payload-favicon.svg" />
-          <Image
-            alt="Payload Logo"
-            height={65}
-            src="https://raw.githubusercontent.com/payloadcms/payload/3.x/packages/ui/src/assets/payload-favicon.svg"
-            width={65}
-          />
-        </picture>
-        {!user && <h1>Welcome to your new project.</h1>}
-        {user && <h1>Welcome back, {user.email}</h1>}
-        <div className="links">
-          <a
-            className="admin"
-            href={payloadConfig.routes.admin}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Go to admin panel
-          </a>
-          <a
-            className="docs"
-            href="https://payloadcms.com/docs"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Documentation
-          </a>
-        </div>
-      </div>
-      <div className="footer">
-        <p>Update this page by editing</p>
-        <a className="codeLink" href={fileURL}>
-          <code>app/(frontend)/page.tsx</code>
-        </a>
-      </div>
+    <div className="site-shell">
+      <SiteHeader />
+
+      <main>
+        <header className="portfolio-intro" aria-labelledby="intro-title">
+          <p className="eyebrow">Software Engineer</p>
+          <h1 id="intro-title">Dwiki, software engineer.</h1>
+          <p>Projects, experience, and notes from building across iOS and the web.</p>
+        </header>
+
+        <section className="content-section" id="work" aria-labelledby="work-title">
+          <div className="section-heading">
+            <h2 id="work-title">Selected projects</h2>
+            <p>A few products and experiments across iOS, web, and applied AI.</p>
+          </div>
+          {projects.length ? (
+            <div className="project-grid">
+              {projects.map((project, index) => (
+                <ProjectCard featured={index === 0} key={project.id} project={project} />
+              ))}
+            </div>
+          ) : (
+            <p className="empty-state">Projects will appear here soon.</p>
+          )}
+          <Link className="section-link" href="/projects">
+            View all projects
+          </Link>
+        </section>
+
+        <section className="content-section" id="experience" aria-labelledby="experience-title">
+          <div className="section-heading">
+            <h2 id="experience-title">Experience</h2>
+            <p>Roles where I learned to move from product questions to production systems.</p>
+          </div>
+          {experiences.length ? (
+            <div className="experience-list">
+              {experiences.map((experience) => (
+                <ExperienceRow key={experience.id} experience={experience} />
+              ))}
+            </div>
+          ) : (
+            <p className="empty-state">Experience will appear here soon.</p>
+          )}
+        </section>
+
+        <section
+          className="content-section writing-section"
+          id="writing"
+          aria-labelledby="writing-title"
+        >
+          <div className="section-heading">
+            <h2 id="writing-title">Writing</h2>
+            <p>Notes on building software, working across platforms, and learning in public.</p>
+          </div>
+          {posts.length ? (
+            <div className="post-list">
+              {posts.map((post) => (
+                <PostRow key={post.id} post={post} />
+              ))}
+            </div>
+          ) : (
+            <p className="empty-state">No published notes yet.</p>
+          )}
+          <Link className="section-link" href="/blog">
+            Read all writing
+          </Link>
+        </section>
+      </main>
+
+      <SiteFooter />
     </div>
   )
 }
