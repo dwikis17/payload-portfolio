@@ -15,6 +15,15 @@ export const Posts: CollectionConfig = {
     { name: 'excerpt', type: 'textarea', required: true },
     { name: 'publishedAt', type: 'date' },
     { name: 'cover', type: 'upload', relationTo: 'media' },
+    {
+      name: 'categories',
+      type: 'relationship',
+      relationTo: 'categories',
+      hasMany: true,
+      admin: {
+        position: 'sidebar',
+      },
+    },
     { name: 'content', type: 'richText', required: true },
   ],
   versions: {

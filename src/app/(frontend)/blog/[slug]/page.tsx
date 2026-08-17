@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { RichTextContent, SiteFooter, SiteHeader, formatMonth } from '../../components'
+import { PostCategoryLinks, RichTextContent, SiteFooter, SiteHeader, formatMonth } from '../../components'
 import { getMediaUrl, getPost } from '@/lib/portfolio'
 
 export const dynamic = 'force-dynamic'
@@ -42,6 +42,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <h1>{post.title}</h1>
           <p>{post.excerpt}</p>
         </header>
+        <PostCategoryLinks post={post} />
         {cover ? (
           <div className="detail-cover">
             <Image

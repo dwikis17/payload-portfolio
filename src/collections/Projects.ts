@@ -30,7 +30,25 @@ export const Projects: CollectionConfig = {
       ],
     },
     { name: 'cover', type: 'upload', relationTo: 'media' },
-    { name: 'content', type: 'richText', required: true },
+    {
+      name: 'gallery',
+      type: 'upload',
+      relationTo: 'media',
+      hasMany: true,
+      filterOptions: {
+        mimeType: { contains: 'image' },
+      },
+      admin: {
+        description: 'Optional images shown alongside the cover on the project page.',
+        isSortable: true,
+      },
+    },
+    {
+      name: 'content',
+      label: 'Description',
+      type: 'richText',
+      required: true,
+    },
     { name: 'featured', type: 'checkbox', defaultValue: false },
     { name: 'order', type: 'number', defaultValue: 0, required: true },
   ],

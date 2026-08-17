@@ -301,6 +301,31 @@ export const portfolioSeed: {
   ],
 }
 
+export async function seedCategories(payload: Payload, req?: PayloadRequest): Promise<void> {
+  for (const category of [
+    { name: 'AI & ML', slug: 'ai-ml' },
+    { name: 'iOS', slug: 'ios' },
+    { name: 'Personal', slug: 'personal' },
+  ]) {
+    const existing = await payload.find({
+      collection: 'categories',
+      limit: 1,
+      overrideAccess: true,
+      ...(req ? { req } : {}),
+      where: { slug: { equals: category.slug } },
+    })
+
+    if (!existing.docs.length) {
+      await payload.create({
+        collection: 'categories',
+        data: category,
+        overrideAccess: true,
+        ...(req ? { req } : {}),
+      })
+    }
+  }
+}
+
 export async function seedPortfolio(payload: Payload, req?: PayloadRequest): Promise<void> {
   for (const project of portfolioSeed.projects) {
     const existing = await payload.find({

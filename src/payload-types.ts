@@ -71,6 +71,7 @@ export interface Config {
     media: Media;
     projects: Project;
     experiences: Experience;
+    categories: Category;
     posts: Post;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -83,6 +84,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     experiences: ExperiencesSelect<false> | ExperiencesSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -191,6 +193,10 @@ export interface Project {
       }[]
     | null;
   cover?: (number | null) | Media;
+  /**
+   * Optional images shown alongside the cover on the project page.
+   */
+  gallery?: (number | Media)[] | null;
   content: {
     root: {
       type: string;
@@ -243,6 +249,21 @@ export interface Experience {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts".
  */
 export interface Post {
@@ -252,6 +273,7 @@ export interface Post {
   excerpt: string;
   publishedAt?: string | null;
   cover?: (number | null) | Media;
+  categories?: (number | Category)[] | null;
   content: {
     root: {
       type: string;
@@ -310,6 +332,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'experiences';
         value: number | Experience;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
       } | null)
     | ({
         relationTo: 'posts';
@@ -420,6 +446,7 @@ export interface ProjectsSelect<T extends boolean = true> {
         id?: T;
       };
   cover?: T;
+  gallery?: T;
   content?: T;
   featured?: T;
   order?: T;
@@ -457,6 +484,17 @@ export interface ExperiencesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  generateSlug?: T;
+  slug?: T;
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
@@ -465,6 +503,7 @@ export interface PostsSelect<T extends boolean = true> {
   excerpt?: T;
   publishedAt?: T;
   cover?: T;
+  categories?: T;
   content?: T;
   updatedAt?: T;
   createdAt?: T;

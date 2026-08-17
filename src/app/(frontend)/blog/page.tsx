@@ -1,12 +1,12 @@
 import Link from 'next/link'
 
-import { PostRow, SiteFooter, SiteHeader } from '../components'
-import { getPosts } from '@/lib/portfolio'
+import { CategoryNav, PostRow, SiteFooter, SiteHeader } from '../components'
+import { getCategories, getPosts } from '@/lib/portfolio'
 
 export const dynamic = 'force-dynamic'
 
 export default async function BlogPage() {
-  const posts = await getPosts()
+  const [categories, posts] = await Promise.all([getCategories(), getPosts()])
 
   return (
     <div className="site-shell">
@@ -20,6 +20,7 @@ export default async function BlogPage() {
           <h1>Notes from the work.</h1>
           <p>Short notes on building software, working across platforms, and learning in public.</p>
         </header>
+        <CategoryNav categories={categories} />
         {posts.length ? (
           <div className="post-list">
             {posts.map((post) => (

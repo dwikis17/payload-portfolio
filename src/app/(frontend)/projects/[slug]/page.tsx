@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { RichTextContent, SiteFooter, SiteHeader } from '../../components'
-import { getMediaUrl, getProject } from '@/lib/portfolio'
+import { ProjectGallery, RichTextContent, SiteFooter, SiteHeader } from '../../components'
+import { getProject } from '@/lib/portfolio'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,10 +26,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const project = await getProject(slug)
 
   if (!project) notFound()
-
-  const cover =
-    getMediaUrl(project.cover) ??
-    (project.slug === 'eyespeak-assistive-tech' ? '/portfolio/eyespeak.webp' : null)
 
   return (
     <div className="site-shell">
@@ -73,16 +68,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             ) : null}
           </aside>
           <div className="detail-content">
-            {cover ? (
-              <div className="detail-cover">
-                <Image
-                  alt={`${project.title} project preview`}
-                  fill
-                  sizes="(max-width: 760px) 100vw, 62vw"
-                  src={cover}
-                />
-              </div>
-            ) : null}
+            <ProjectGallery project={project} />
             <p className="project-impact detail-impact">{project.impact}</p>
             <RichTextContent data={project.content} />
           </div>

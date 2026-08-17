@@ -51,6 +51,28 @@ test.describe('Frontend', () => {
     ).toBeVisible()
   })
 
+  test('browses writing by category', async ({ page }) => {
+    await page.goto('http://localhost:3000/blog')
+
+    await expect(page.getByRole('link', { name: 'AI & ML', exact: true }).first()).toBeVisible()
+    await expect(page.getByRole('link', { name: 'iOS', exact: true }).first()).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Personal', exact: true }).first()).toBeVisible()
+
+    await page.getByRole('link', { name: 'AI & ML', exact: true }).first().click()
+
+    await expect(page).toHaveURL(/\/blog\/category\/ai-ml$/)
+    await expect(page.getByRole('heading', { name: 'AI & ML' })).toBeVisible()
+    await expect(
+      page.getByRole('link', { name: /Building across iOS and the web/ }),
+    ).toBeVisible()
+  })
+
+  test('returns 404 for an unknown writing category', async ({ page }) => {
+    const response = await page.goto('http://localhost:3000/blog/category/not-a-category')
+
+    expect(response?.status()).toBe(404)
+  })
+
   test('redirects legacy project URLs and hides drafts', async ({ page }) => {
     await page.goto('http://localhost:3000/projects/3d6a5f0d-f117-4a50-9600-3a3565a55528')
     await expect(page).toHaveURL(/\/projects\/eyespeak-assistive-tech$/)

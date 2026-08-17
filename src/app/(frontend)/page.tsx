@@ -10,7 +10,7 @@ export default async function HomePage() {
   const [projects, experiences, posts] = await Promise.all([
     getProjects({ featuredOnly: true, limit: 3 }),
     getExperiences(5),
-    getPosts(3),
+    getPosts({ limit: 3 }),
   ])
 
   return (
