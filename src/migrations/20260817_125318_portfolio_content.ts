@@ -3,6 +3,27 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-d1-sqlite'
 import { seedPortfolio } from '../seed/portfolio'
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
+  await db.run(sql`CREATE TABLE \`projects\` (
+  	\`id\` integer PRIMARY KEY NOT NULL,
+  	\`title\` text NOT NULL,
+  	\`slug\` text NOT NULL,
+  	\`summary\` text NOT NULL,
+  	\`role\` text NOT NULL,
+  	\`impact\` text NOT NULL,
+  	\`year\` numeric NOT NULL,
+  	\`cover_id\` integer,
+  	\`content\` text NOT NULL,
+  	\`featured\` integer DEFAULT false,
+  	\`order\` numeric DEFAULT 0 NOT NULL,
+  	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+  	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+  	FOREIGN KEY (\`cover_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null
+  );
+  `)
+  await db.run(sql`CREATE UNIQUE INDEX \`projects_slug_idx\` ON \`projects\` (\`slug\`);`)
+  await db.run(sql`CREATE INDEX \`projects_cover_idx\` ON \`projects\` (\`cover_id\`);`)
+  await db.run(sql`CREATE INDEX \`projects_updated_at_idx\` ON \`projects\` (\`updated_at\`);`)
+  await db.run(sql`CREATE INDEX \`projects_created_at_idx\` ON \`projects\` (\`created_at\`);`)
   await db.run(sql`CREATE TABLE \`projects_technologies\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
@@ -30,27 +51,26 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(
     sql`CREATE INDEX \`projects_links_parent_id_idx\` ON \`projects_links\` (\`_parent_id\`);`,
   )
-  await db.run(sql`CREATE TABLE \`projects\` (
+  await db.run(sql`CREATE TABLE \`experiences\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
-  	\`title\` text NOT NULL,
-  	\`slug\` text NOT NULL,
-  	\`summary\` text NOT NULL,
+  	\`company\` text NOT NULL,
   	\`role\` text NOT NULL,
-  	\`impact\` text NOT NULL,
-  	\`year\` numeric NOT NULL,
-  	\`cover_id\` integer,
-  	\`content\` text NOT NULL,
-  	\`featured\` integer DEFAULT false,
+  	\`start_date\` text NOT NULL,
+  	\`end_date\` text,
+  	\`current\` integer DEFAULT false,
+  	\`employment_type\` text,
+  	\`location\` text,
   	\`order\` numeric DEFAULT 0 NOT NULL,
   	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
-  	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
-  	FOREIGN KEY (\`cover_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null
+  	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL
   );
   `)
-  await db.run(sql`CREATE UNIQUE INDEX \`projects_slug_idx\` ON \`projects\` (\`slug\`);`)
-  await db.run(sql`CREATE INDEX \`projects_cover_idx\` ON \`projects\` (\`cover_id\`);`)
-  await db.run(sql`CREATE INDEX \`projects_updated_at_idx\` ON \`projects\` (\`updated_at\`);`)
-  await db.run(sql`CREATE INDEX \`projects_created_at_idx\` ON \`projects\` (\`created_at\`);`)
+  await db.run(
+    sql`CREATE INDEX \`experiences_updated_at_idx\` ON \`experiences\` (\`updated_at\`);`,
+  )
+  await db.run(
+    sql`CREATE INDEX \`experiences_created_at_idx\` ON \`experiences\` (\`created_at\`);`,
+  )
   await db.run(sql`CREATE TABLE \`experiences_highlights\` (
   	\`_order\` integer NOT NULL,
   	\`_parent_id\` integer NOT NULL,
@@ -79,26 +99,6 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   )
   await db.run(
     sql`CREATE INDEX \`experiences_links_parent_id_idx\` ON \`experiences_links\` (\`_parent_id\`);`,
-  )
-  await db.run(sql`CREATE TABLE \`experiences\` (
-  	\`id\` integer PRIMARY KEY NOT NULL,
-  	\`company\` text NOT NULL,
-  	\`role\` text NOT NULL,
-  	\`start_date\` text NOT NULL,
-  	\`end_date\` text,
-  	\`current\` integer DEFAULT false,
-  	\`employment_type\` text,
-  	\`location\` text,
-  	\`order\` numeric DEFAULT 0 NOT NULL,
-  	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
-  	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL
-  );
-  `)
-  await db.run(
-    sql`CREATE INDEX \`experiences_updated_at_idx\` ON \`experiences\` (\`updated_at\`);`,
-  )
-  await db.run(
-    sql`CREATE INDEX \`experiences_created_at_idx\` ON \`experiences\` (\`created_at\`);`,
   )
   await db.run(sql`CREATE TABLE \`posts\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
