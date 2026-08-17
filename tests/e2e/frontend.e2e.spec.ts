@@ -11,7 +11,9 @@ test.describe('Frontend', () => {
     await page.goto('http://localhost:3000')
 
     await expect(page).toHaveTitle('Dwiki | Software Engineer')
-    await expect(page.getByRole('heading', { name: 'Dwiki, software engineer.' })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'A lifelong learner and software engineer.' }),
+    ).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Selected projects' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Experience' })).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Writing' })).toBeVisible()

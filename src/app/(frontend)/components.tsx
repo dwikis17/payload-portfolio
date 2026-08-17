@@ -29,15 +29,9 @@ export function SiteHeader() {
 export function SiteFooter() {
   return (
     <footer className="site-footer">
-      <div>
-        <p className="footer-kicker">{siteConfig.name}</p>
-        <h2>Looking for a software engineer?</h2>
-        <p>Email is the fastest way to reach me.</p>
-      </div>
+      <p className="footer-kicker">Contact</p>
       <div className="footer-links">
-        <a className="button button-primary" href={`mailto:${siteConfig.email}`}>
-          Email
-        </a>
+        <a href={`mailto:${siteConfig.email}`}>Email</a>
         <a href={siteConfig.social.linkedin} rel="noreferrer" target="_blank">
           LinkedIn
         </a>

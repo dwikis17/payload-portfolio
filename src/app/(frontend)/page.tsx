@@ -19,9 +19,12 @@ export default async function HomePage() {
 
       <main>
         <header className="portfolio-intro" aria-labelledby="intro-title">
-          <p className="eyebrow">Software Engineer</p>
-          <h1 id="intro-title">Dwiki, software engineer.</h1>
-          <p>Projects, experience, and notes from building across iOS and the web.</p>
+          <p className="eyebrow">Hi, I&apos;m Dwiki.</p>
+          <h1 id="intro-title">A lifelong learner and software engineer.</h1>
+          <p>
+            I&apos;m currently learning about AI and machine learning. See my journey through the
+            projects, experience, and notes below.
+          </p>
         </header>
 
         <section className="content-section" id="work" aria-labelledby="work-title">

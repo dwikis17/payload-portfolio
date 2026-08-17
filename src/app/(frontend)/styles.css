@@ -439,27 +439,12 @@ h3 {
 }
 
 .site-footer {
-  align-items: end;
+  align-items: center;
   border-top: 1px solid var(--line);
   display: flex;
   gap: 40px;
   justify-content: space-between;
   padding: 72px 0 52px;
-}
-
-.footer-kicker {
-  margin-bottom: 16px;
-}
-
-.site-footer h2 {
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  line-height: 1;
-  max-width: 10ch;
-}
-
-.site-footer p:not(.footer-kicker) {
-  color: var(--muted);
-  margin-top: 18px;
 }
 
 .footer-links {
