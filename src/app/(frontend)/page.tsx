@@ -25,6 +25,11 @@ export default async function HomePage() {
             I&apos;m currently learning about AI and machine learning. See my journey through the
             projects, experience, and notes below.
           </p>
+          <div className="intro-actions">
+            <Link className="button button-primary" href="#writing">
+              Read my writings <span aria-hidden="true">→</span>
+            </Link>
+          </div>
         </header>
 
         <section className="content-section" id="work" aria-labelledby="work-title">
